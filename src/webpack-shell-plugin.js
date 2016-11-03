@@ -3,7 +3,6 @@ const defaultOptions = {
   onBuildStart: [],
   onBuildEnd: [],
   onBuildExit: [],
-  dev: true,
   verbose: false
 };
 
@@ -58,16 +57,13 @@ export default class WebpackShellPlugin {
 
   apply(compiler) {
 
-    compiler.plugin('compilation', (compilation) => {
+    compiler.plugin('compile', (compilation) => {
       if (this.options.verbose) {
         console.log(`Report compilation: ${compilation}`);
       }
       if (this.options.onBuildStart.length) {
         console.log('Executing pre-build scripts');
         this.options.onBuildStart.forEach(handleScript);
-        if (this.options.dev) {
-          this.options.onBuildStart = [];
-        }
       }
     });
 
@@ -75,9 +71,6 @@ export default class WebpackShellPlugin {
       if (this.options.onBuildEnd.length) {
         console.log('Executing post-build scripts');
         this.options.onBuildEnd.forEach(handleScript);
-        if (this.options.dev) {
-          this.options.onBuildEnd = [];
-        }
       }
       callback();
     });
